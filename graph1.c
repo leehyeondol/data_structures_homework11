@@ -123,34 +123,6 @@ void destoryGraph(Graph** g)
 
 
 
-void enQueue(int* Queue, int* front, int rear, int num)
-{
-   if ((*front + 1) % MAX_VERTEX + 1 != rear)  
-   {
-      *front = (*front + 1) % MAX_VERTEX;
-      Queue[*front] = num;
-   }
-   else
-      printf("\n\nQueue is full!\n");
-}
-
-
-int deQueue(int* Queue, int front, int* rear)
-{
-   int key;
-   if (front != *rear)
-   {
-      *rear = (*rear + 1) % MAX_VERTEX;
-      key = Queue[(*rear)];
-      printf("%d ", key);
-      return key;
-   }
-   else
-      printf("\n\nQueue is empty!\n");
-   return -1;
-}
-
-
 
 void push(int* stack, int* top, int num)
 {
@@ -188,25 +160,174 @@ void printGraph(VertexHead* vh)
 
 void insertEdge(VertexHead* vh)
 {
+   int n1, n2;
+   Vertex* find;
+   Vertex* v1;
+   Vertex* v2;
 
+   printf("연결할 Vertex1: ");
+   scanf("%d", &n1);
+   printf("연결할 Vertex2: ");
+   scanf("%d", &n2);
+
+ 
+   if (vh[n1].head != NULL && vh[n2].head != NULL)   
+   {
+      v1 = (Vertex*)malloc(sizeof(Vertex));
+      v1->num = n2;
+      v1->link = NULL;
+
+      v2 = (Vertex*)malloc(sizeof(Vertex));
+      v2->num = n1;
+      v2->link = NULL;
+
+
+      find = vh[n1].head;
+      while (find->link != NULL)
+         find = find->link;
+      find->link = v1;
+
+      find = vh[n2].head;
+      while (find->link != NULL)
+         find = find->link;
+      find->link = v2;
+   }
+   else
+      printf("\nCannot find Vertex");
 }
 
 
 void insertVertex(VertexHead* vh)
 {
+   int key;
 
+   printf("Vertex: ");
+   scanf("%d", &key);
+
+   if (0 <= key && key < 20)
+   {
+      Vertex *new;
+      new = (Vertex*)malloc(sizeof(Vertex));  
+      vh[key].head = new;
+
+      vh[key].head->num = key;
+      vh[key].head->link = NULL;
+   }
+   else
+      printf("\nInput number in range(0,19)");
 }
 
 
 
 int breadthFS(VertexHead* vh)
 {
+   int visited[MAX_VERTEX];   
+   int Queue[MAX_VERTEX];
+   memset(visited, 0, sizeof(visited)); 
 
+   int v, i, key, front, rear;
+   front = -1;
+   rear = -1;
+   Vertex* temp; 
+
+   printf("First Vertex: ");
+   scanf("%d", &v); 
+
+   if (vh[v].head == NULL)
+   {
+      printf("First vertex[%d] doesn't exist", v);
+      return 0;
+   }
+
+   printf("\nBreath First Search: ");
+   temp = vh[v].head;
+   visited[temp->num] = 1;
+   enQueue(Queue, &front, rear, temp->num); 
+
+   do {
+      key = deQueue(Queue, front, &rear);
+      if (key == -1)
+         return 0;
+      temp = vh[key].head->link;
+      while (temp != NULL)
+      {
+         if (visited[temp->num] == 0)
+         {
+            visited[temp->num] = 1;
+            enQueue(Queue, &front, rear, temp->num);
+         }
+         temp = temp->link;
+      }
+   } while (front != rear);
 }
 
 
 int depthFS(VertexHead* vh)
 {
+   int visited[MAX_VERTEX]; 
+   int stack[MAX_VERTEX];
+   memset(visited, 0, sizeof(visited)); 
 
+   int v, i, top;
+   top = -1;
+   Vertex* temp;  
+   Vertex* temp2;  
+   
+   printf("First Vertex: ");  
+   scanf("%d", &v);
+
+  
+   if (vh[v].head == NULL)
+   {
+      printf("First vertex[%d] doesn't exist", v);
+      return 0;
+   }
+
+   printf("\nDepth First Search: ");
+   temp = vh[v].head;
+   do
+   {
+      if (visited[temp->num] == 0)   
+      {
+         push(stack, &top, temp->num);
+         visited[temp->num] = 1;  
+         temp2 = temp->link;
+         while (temp2 != NULL) 
+         {
+            if (visited[temp2->num] == 0)
+            {
+               temp = vh[temp2->num].head;
+               break;
+            }
+            temp2 = temp2->link;
+         }
+         if (temp2 == NULL) 
+         {
+            pop(&top); 
+            temp = vh[stack[top]].head;
+         }
+      }
+      else
+      {  
+         temp2 = temp->link;
+         while (temp2 != NULL) 
+         {
+            if (visited[temp2->num] == 0)
+            {
+               temp = vh[temp2->num].head;
+               break;
+            }
+            temp2 = temp2->link;
+         }
+         if (temp2 == NULL)
+         {
+            pop(&top);
+            if (top != -1)
+               temp = vh[stack[top]].head;
+         }
+      }
+   } while (top != -1);
+
+   return 0;
 }
 
