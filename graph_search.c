@@ -14,7 +14,7 @@ typedef struct VertexHead {//구조체 벌텍스 해드 생성
 } VHead;//별명
 
 typedef struct Graph {//그래프 구조체 생성
-   VHead* vlist;//벌택스 해드형 vlist 생성
+   VHead* vlist;//벌택스 해드형 vlist 생성 , 초기화 할때 인접리스트 생성에 사용됨
 } Graph;//별명
 
 void initializegraph(Graph** g);//초기화 함수
@@ -100,6 +100,7 @@ int main()
 
 
 //그래프를 만드는 함수.다른 명령어들 사용전에 필수적으로 제일먼저 사용해야함
+//링크드리스트로 인접리스트 생성
 
 void initializegraph(Graph** g)//초기화 함수
 {
