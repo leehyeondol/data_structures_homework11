@@ -185,7 +185,10 @@ void printGraph(VHead* vh)//그래프 출력 함수
         }
     }
 }
-
+/*
+간선을 입력하기 위해선 두개의 벌택스를 미리 만들어 두어야 하며,
+이 두개의 벌택스를 입력하면 연결 됨.
+*/
 
 void insertEd(VHead* vh)//Edge를 생성하여 Vertex를 연결하는 함수
 {
